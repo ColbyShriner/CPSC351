@@ -50,8 +50,14 @@
     <?php
     
     // Include your database connection here
-    include('db_connection.php');
+    $servername = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "351project";
+	$port = 3366;
 
+	$dbc = mysqli_connect($servername, $username, $password, $dbname, $port);
+	
     // Insert job listing into the database
     if (isset($_POST['submit'])) {
         $job_title = mysqli_real_escape_string($dbc, trim($_POST['job_title']));
