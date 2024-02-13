@@ -31,7 +31,7 @@
     
     
     <!-- Job Listing Form -->
-    <form action="post_job.php" method="post">
+    <form action="job_listings.php" method="post">
         <label for="job_title">Job Title:</label>
         <input type="text" name="job_title" required>
         <br>
