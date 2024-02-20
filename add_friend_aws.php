@@ -1,22 +1,22 @@
 <!-- Database Connection -->
 <?php
-$db_host = "your-rds-endpoint";
-$db_user = "your-rds-username";
-$db_password = "your-rds-password";
-$db_name = "your-rds-database";
+$db_host = "rds endpoint";
+$db_user = "rds username";
+$db_password = "rds password";
+$db_name = "rds database name";
 
 $dbc = mysqli_connect($db_host, $db_user, $db_password, $db_name);
 
 if (!$dbc) {
-    die("Connection failed: " . mysqli_connect_error());
+    die("Connection Failed: " . mysqli_connect_error());
 }
 ?>
 
-<!-- Add a section for Networking in the main content -->
+<!-- Section for networking in the main content -->
 <section id="networking">
     <h1>Networking</h1>
 
-    <!-- Friend Request Form -->
+    <!-- Friend Request -->
     <form action="networking.php" method="post">
         <label for="friend_username">Friend's Username:</label>
         <input type="text" name="friend_username" required>
@@ -27,9 +27,9 @@ if (!$dbc) {
     <!-- Display Friends -->
     <h2>Your Friends:</h2>
     <?php
-    // Include database connection here
+    // insert database connection below
 
-    // Assuming you have a users table with a column "INSERT COLUMN NAME"
+    // IF WE HAVE users table with a column "users"
     $query = "SELECT * FROM INSERT TABLE NAME";
     $result = mysqli_query($dbc, $query);
 
@@ -43,11 +43,11 @@ if (!$dbc) {
 </section>
 
 <?php
-// Add friend or remove friend functionality
+// Add friend or remove friend
 if (isset($_POST['add_friend'])) {
     $friend_username = mysqli_real_escape_string($dbc, trim($_POST['friend_username']));
 
-    // Check if the friend exists in the database
+    // Check if the friend exists
     $query = "SELECT * FROM INSERT TABLE NAME WHERE INSERT COLUMN NAME = '$friend_username'";
     $result = mysqli_query($dbc, $query);
     $friend = mysqli_fetch_assoc($result);
@@ -73,7 +73,7 @@ if (isset($_POST['add_friend'])) {
     }
 }
 
-// Remove friend functionality
+// Remove friend function
 if (isset($_GET['remove_friend'])) {
     $friend_id_to_remove = mysqli_real_escape_string($dbc, $_GET['remove_friend']);
     $user_id = 1; // Replace with the current user's ID, you need to fetch it based on the logged-in user
