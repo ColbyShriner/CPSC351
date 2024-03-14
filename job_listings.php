@@ -91,3 +91,55 @@
 <script src="script.js"></script>
 </body>
 </html>
+ 
+<?php
+// Database connection setup
+function OpenCon()
+{
+    $dbhost = "localhost";
+    $dbuser = "root";
+    $db = "ProjectDB"; 
+    $conn = new mysqli($dbhost, $dbuser, $dbpass, $db) or die("Connect failed: %s\n". $conn -> error);
+    return $conn;
+}
+
+function CloseCon($conn)
+{
+    $conn -> close();
+}
+
+// Open the database connection
+$conn = OpenCon();
+
+// Check if the form is submitted
+if (isset($_POST['submit'])) {
+    // Prepare and bind
+    $stmt = $conn->prepare("INSERT INTO POST (PostID, Post Title, Post Content, Date Posted, ACCOUNT_AccountID) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("isssi", $postID, $postTitle, $postContent, $datePosted, $accountID);
+
+    // Set parameters and execute
+    $postID = $_POST['postID'];
+    $postTitle = $_POST['postTitle'];
+    $postContent = $_POST['postContent'];
+    $datePosted = date("Y-m-d H:i:s");
+    $accountID = $_POST['accountID'];
+    $stmt->execute();
+
+    // Check for errors
+    if ($stmt->error) {
+        echo "Error: " . $stmt->error;
+    } else {
+        echo "New post created successfully";
+    }
+
+    // Close statement
+    $stmt->close();
+}
+
+// Close connection
+CloseCon($conn);
+?>
+</main>
+<script src="script.js"></script>
+</body>
+</html>
