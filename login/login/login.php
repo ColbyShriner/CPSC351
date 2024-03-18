@@ -74,7 +74,7 @@ session_start();
 	
 	#box{
 		
-		background-color: grey;
+		background-color: blue;
 		margin: auto;
 		width: 300px;
 		padding: 20px;
@@ -93,5 +93,18 @@ session_start();
 			<a href="signup.php">Click to Signup</a><br><br>
 		</form>
 	
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CNU Alumni Connect</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <img src="cnu.jpg" alt="CNU Logo" id="cnu-logo">
+</header>
+<script src="scripts.js"></script>
 </body>
 </html>
