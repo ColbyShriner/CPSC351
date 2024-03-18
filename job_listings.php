@@ -1,12 +1,32 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CNU Alumni Connect - Job Listings</title>
-    <link rel="stylesheet" href="styles.css">
-    
+    <style>
+        .job-listing {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+            overflow: hidden; /* to contain the floated image */
+        }
+
+        .job-listing img {
+            float: left;
+            margin-right: 10px;
+            max-width: 100px; /* adjust the width as needed */
+            max-height: 100px; /* adjust the height as needed */
+        }
+
+        .job-listing h2 {
+            margin-top: 0;
+        }
+
+        .job-listing p {
+            margin-bottom: 5px;
+        }
+    </style>
 </head>
 <body>
 <header>
@@ -28,8 +48,7 @@
 </header>
 <main>
     <h1>Welcome to CNU Alumni Connect - Job Listings!</h1>
-    
-    
+
     <!-- Job Listing Form -->
     <form action="job_listings.php" method="post">
         <label for="job_title">Job Title:</label>
@@ -47,155 +66,65 @@
         <input type="submit" name="submit" value="Post Job Listing">
     </form>
 
-<!-- 
-    <?php
-    
-    // Include your database connection here
-    $servername = "localhost";
-	$username = "root";
-	$password = "";
-	$dbname = "ProjectDB";
-	$port = 3366;
+<?php
+session_start();
 
-	$dbc = mysqli_connect($servername, $username, $password, $dbname, $port);
-	
+// Include your database connection here
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "ProjectDB";
+$port = 3366;
+
+$dbc = mysqli_connect($servername, $username, $password, $dbname, $port);
+
+// Check if the form is submitted and the session variable is not set
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_SESSION['form_submitted'])) {
+    $job_title = mysqli_real_escape_string($dbc, $_POST['job_title']);
+    $company = mysqli_real_escape_string($dbc, $_POST['company']);
+    $description = mysqli_real_escape_string($dbc, $_POST['description']);
+    $contact_email = mysqli_real_escape_string($dbc, $_POST['contact_email']);
+
     // Insert job listing into the database
-    if (isset($POST['Post Job Listing'])) {
-        $job_title = mysqli_real_escape_string($dbc, trim($POST['job title']));
-        $company = mysqli_real_escape_string($dbc, trim($POST['company']));
-        $description = mysqli_real_escape_string($dbc, trim($POST['description']));
-        $contact_email = mysqli_real_escape_string($dbc, trim($POST['contact_email']));
+    $query = "INSERT INTO job_listings (job_title, company, description, contact_email) VALUES ('$job_title', '$company', '$description', '$contact_email')";
+    mysqli_query($dbc, $query);
 
-        // Insert job listing into the database
-        $query = "INSERT INTO POST (job_title, company, description, contact_email) VALUES ('$job_title', '$company', '$description', '$contact_email')";
-        mysqli_query($dbc, $query);
-    }
+    // Set session variable to mark form submission
+    $_SESSION['form_submitted'] = true;
 
-    // Retrieve job listings from the database
-    $query = "SELECT * FROM POST ORDER BY PostID";
-    $result = mysqli_query($dbc, $query);
-
-    // Display job listings
-    while ($row = mysqli_fetch_array($result)) {
-        echo '<div class="job-listing">';
-        echo '<h2>' . $row['job_title'] . '</h2>';
-        echo '<p>Company: ' . $row['company'] . '</p>';
-        echo '<p>Description: ' . $row['description'] . '</p>';
-        echo '<p>Contact Email: ' . $row['contact_email'] . '</p>';
-        echo '</div>';
-    }
-
-    // Close connection
-    mysqli_close($dbc);
-    ?>
-</main>
-<script src="script.js"></script>
-</body>
-</html>
- 
-<?php
-// Database connection setup
-function OpenCon()
-{
-    $dbhost = "localhost";
-    $dbuser = "root";
-    $db = "ProjectDB"; 
-    $conn = new mysqli($dbhost, $dbuser, $dbpass, $db) or die("Connect failed: %s\n". $conn -> error);
-    return $conn;
+    // Redirect to prevent form resubmission
+    header("Location: {$_SERVER['REQUEST_URI']}");
+    exit();
 }
 
-function CloseCon($conn)
-{
-    $conn -> close();
-}
+// Retrieve job listings from the database
+$query = "SELECT * FROM job_listings ORDER BY job_title";
+$result = mysqli_query($dbc, $query);
 
-// Open the database connection
-$conn = OpenCon();
-
-// Check if the form is submitted
-if (isset($POST['submit'])) {
-    // Prepare and bind
-    $stmt = $conn->prepare("INSERT INTO POST (PostID, Post Title, Post Content, Date Posted, ACCOUNT_AccountID) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("isssi", $postID, $postTitle, $postContent, $datePosted, $accountID);
-
-    // Set parameters and execute
-    $postID = $POST['postID'];
-    $postTitle = $POST['postTitle'];
-    $postContent = $POST['postContent'];
-    $datePosted = date("Y-m-d H:i:s");
-    $accountID = $POST['accountID'];
-    $stmt->execute();
-
-    // Check for errors
-    if ($stmt->error) {
-        echo "Error: " . $stmt->error;
-    } else {
-        echo "New post created successfully";
-    }
-
-    // Close statement
-    $stmt->close();
+// Display job listings
+while ($row = mysqli_fetch_array($result)) {
+    echo '<div class="job-listing">';
+    echo '<h2>' . $row['job_title'] . '</h2>';
+    echo '<p>Company: ' . $row['company'] . '</p>';
+    echo '<p>Description: ' . $row['description'] . '</p>';
+    echo '<p>Contact Email: ' . $row['contact_email'] . '</p>';
+    // Add a hide button
+    echo '<button class="hide-btn">Hide</button>';
+    echo '</div>';
 }
 
 // Close connection
-CloseCon($conn);
+mysqli_close($dbc);
 ?>
- -->
-<?php
-// Database connection setup
-function OpenCon()
-{
-    $dbhost = "localhost";
-    $dbuser = "root";
-    $dbpass = ""; // Make sure to set your database password
-    $db = "ProjectDB"; // Make sure this matches your database name
-    $conn = new mysqli($dbhost, $dbuser, $dbpass, $db);
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-    return $conn;
-}
-
-function CloseCon($conn)
-{
-    $conn->close();
-}
-
-// Open the database connection
-$conn = OpenCon();
-
-// Check if the form is submitted
-if (isset($_POST['submit'])) {
-    // Prepare and bind
-    $stmt = $conn->prepare("INSERT INTO job_listings (job_title, company, description, contact_email) VALUES (?, ?, ?, ?)");
-    if (!$stmt) {
-        die("Prepare failed: (" . $conn->errno . ") " . $conn->error);
-    }
-
-    // Bind parameters
-    $stmt->bind_param("ssss", $job_title, $company, $description, $contact_email);
-
-    // Set parameters
-    $job_title = trim($_POST['job_title']);
-    $company = trim($_POST['company']);
-    $description = trim($_POST['description']);
-    $contact_email = trim($_POST['contact_email']);
-
-    // Execute the statement
-    if (!$stmt->execute()) {
-        echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
-    } else {
-        echo "New job listing created successfully";
-    }
-
-    // Close statement
-    $stmt->close();
-}
-
-// Close connection
-CloseCon($conn);
-?>
+    <script>
+        // JavaScript for hiding job listings
+        const hideButtons = document.querySelectorAll('.hide-btn');
+        hideButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                button.parentNode.style.display = 'none';
+            });
+        });
+    </script>
 </main>
-<script src="script.js"></script>
 </body>
 </html>
