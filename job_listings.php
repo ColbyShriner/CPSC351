@@ -47,31 +47,32 @@
         <input type="submit" name="submit" value="Post Job Listing">
     </form>
 
+<!-- 
     <?php
     
     // Include your database connection here
     $servername = "localhost";
 	$username = "root";
 	$password = "";
-	$dbname = "351project";
+	$dbname = "ProjectDB";
 	$port = 3366;
 
 	$dbc = mysqli_connect($servername, $username, $password, $dbname, $port);
 	
     // Insert job listing into the database
-    if (isset($_POST['submit'])) {
-        $job_title = mysqli_real_escape_string($dbc, trim($_POST['job_title']));
-        $company = mysqli_real_escape_string($dbc, trim($_POST['company']));
-        $description = mysqli_real_escape_string($dbc, trim($_POST['description']));
-        $contact_email = mysqli_real_escape_string($dbc, trim($_POST['contact_email']));
+    if (isset($POST['Post Job Listing'])) {
+        $job_title = mysqli_real_escape_string($dbc, trim($POST['job title']));
+        $company = mysqli_real_escape_string($dbc, trim($POST['company']));
+        $description = mysqli_real_escape_string($dbc, trim($POST['description']));
+        $contact_email = mysqli_real_escape_string($dbc, trim($POST['contact_email']));
 
         // Insert job listing into the database
-        $query = "INSERT INTO job_listings (job_title, company, description, contact_email) VALUES ('$job_title', '$company', '$description', '$contact_email')";
+        $query = "INSERT INTO POST (job_title, company, description, contact_email) VALUES ('$job_title', '$company', '$description', '$contact_email')";
         mysqli_query($dbc, $query);
     }
 
     // Retrieve job listings from the database
-    $query = "SELECT * FROM job_listings ORDER BY id DESC";
+    $query = "SELECT * FROM POST ORDER BY PostID";
     $result = mysqli_query($dbc, $query);
 
     // Display job listings
@@ -112,17 +113,17 @@ function CloseCon($conn)
 $conn = OpenCon();
 
 // Check if the form is submitted
-if (isset($_POST['submit'])) {
+if (isset($POST['submit'])) {
     // Prepare and bind
     $stmt = $conn->prepare("INSERT INTO POST (PostID, Post Title, Post Content, Date Posted, ACCOUNT_AccountID) VALUES (?, ?, ?, ?, ?)");
     $stmt->bind_param("isssi", $postID, $postTitle, $postContent, $datePosted, $accountID);
 
     // Set parameters and execute
-    $postID = $_POST['postID'];
-    $postTitle = $_POST['postTitle'];
-    $postContent = $_POST['postContent'];
+    $postID = $POST['postID'];
+    $postTitle = $POST['postTitle'];
+    $postContent = $POST['postContent'];
     $datePosted = date("Y-m-d H:i:s");
-    $accountID = $_POST['accountID'];
+    $accountID = $POST['accountID'];
     $stmt->execute();
 
     // Check for errors
@@ -130,6 +131,61 @@ if (isset($_POST['submit'])) {
         echo "Error: " . $stmt->error;
     } else {
         echo "New post created successfully";
+    }
+
+    // Close statement
+    $stmt->close();
+}
+
+// Close connection
+CloseCon($conn);
+?>
+ -->
+<?php
+// Database connection setup
+function OpenCon()
+{
+    $dbhost = "localhost";
+    $dbuser = "root";
+    $dbpass = ""; // Make sure to set your database password
+    $db = "ProjectDB"; // Make sure this matches your database name
+    $conn = new mysqli($dbhost, $dbuser, $dbpass, $db);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    return $conn;
+}
+
+function CloseCon($conn)
+{
+    $conn->close();
+}
+
+// Open the database connection
+$conn = OpenCon();
+
+// Check if the form is submitted
+if (isset($_POST['submit'])) {
+    // Prepare and bind
+    $stmt = $conn->prepare("INSERT INTO job_listings (job_title, company, description, contact_email) VALUES (?, ?, ?, ?)");
+    if (!$stmt) {
+        die("Prepare failed: (" . $conn->errno . ") " . $conn->error);
+    }
+
+    // Bind parameters
+    $stmt->bind_param("ssss", $job_title, $company, $description, $contact_email);
+
+    // Set parameters
+    $job_title = trim($_POST['job_title']);
+    $company = trim($_POST['company']);
+    $description = trim($_POST['description']);
+    $contact_email = trim($_POST['contact_email']);
+
+    // Execute the statement
+    if (!$stmt->execute()) {
+        echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+    } else {
+        echo "New job listing created successfully";
     }
 
     // Close statement
