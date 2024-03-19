@@ -4,18 +4,15 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Hard-coded AccountID for testing purposes
-$accountId = 1; // Replace 1 with a valid AccountID from your account table
+// Database connection details
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "351project";
+$port = 3366;
 
 // Check if form is submitted
 if (isset($_POST['submit'])) {
-    // Database connection details
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "351project";
-    $port = 3366;
-
     // Create connection
     $dbc = mysqli_connect($servername, $username, $password, $dbname, $port);
 
@@ -29,6 +26,7 @@ if (isset($_POST['submit'])) {
     $stmt->bind_param("isss", $accountId, $title, $content, $imagePath);
 
     // Set parameters and execute
+    $accountId = 1; // Replace 1 with a valid AccountID from your account table
     $title = $_POST['post'];
     $content = $_POST['post']; // Assuming you want to use the same content for both title and content
     $imagePath = ''; // Placeholder for image path
@@ -50,6 +48,23 @@ if (isset($_POST['submit'])) {
     $stmt->close();
     $dbc->close();
 }
+
+// Connect to the database
+$dbc = mysqli_connect($servername, $username, $password, $dbname, $port);
+
+// Check connection
+if (!$dbc) {
+    die("Connection failed: " . mysqli_connect_error());
+} else {
+    echo "Connected successfully."; // Debugging: Confirm database connection
+}
+
+// Retrieve posts from the database
+$query = "SELECT * FROM POST ORDER BY `Date_Posted` DESC";
+$result = mysqli_query($dbc, $query);
+
+// Close the database connection
+mysqli_close($dbc);
 ?>
 
 <!DOCTYPE html>
