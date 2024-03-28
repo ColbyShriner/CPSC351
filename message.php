@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once('Database.php'); // Assuming you have a PHP class to handle your database connection
+require_once('connection.php'); // Assuming you have a PHP class to handle your database connection
 
 // Placeholder for database connection setup
 // Ensure you replace this with actual code to connect to your database, based on your Database.php structure
