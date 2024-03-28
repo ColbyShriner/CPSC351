@@ -4,7 +4,7 @@ require_once('connection.php'); // Assuming you have a PHP class to handle your 
 
 // Placeholder for database connection setup
 // Ensure you replace this with actual code to connect to your database, based on your Database.php structure
-$db = new PDO('mysql:host=your_host;dbname=your_dbname', 'your_username', 'your_password');
+$db = new PDO('mysql:host=localhost;dbname=database351', 'root', '');
 
 // Check if user is logged in and set userID, this part is crucial and needs proper session management
 $userId = $_SESSION['user_id'] ?? null; // Ensure this is securely managed and user is authenticated
