@@ -72,3 +72,37 @@ if (isset($_GET['remove_friend'])) {
     mysqli_query($dbc, $remove_query);
 }
 ?>
+
+
+<!-- <?php
+// Database connection
+$dbc = mysqli_connect('host', 'username', 'password', 'database_name');
+
+// Add friend functionality
+if (isset($_POST['add_friend'])) {
+    $friend_id = mysqli_real_escape_string($dbc, trim($_POST['friend_id']));
+    $user_id = 1; // Replace with the current user's ID, you need to fetch it based on the logged-in user
+
+    // Check if the friendship already exists
+    $check_query = "SELECT * FROM friends WHERE user_id = $user_id AND friend_id = $friend_id";
+    $check_result = mysqli_query($dbc, $check_query);
+
+    if (mysqli_num_rows($check_result) == 0) {
+        // Add the friend
+        $add_query = "INSERT INTO friends (user_id, friend_id) VALUES ($user_id, $friend_id)";
+        mysqli_query($dbc, $add_query);
+    } else {
+        echo 'You are already friends!';
+    }
+}
+
+// Remove friend functionality
+if (isset($_GET['remove_friend'])) {
+    $friend_id_to_remove = mysqli_real_escape_string($dbc, $_GET['remove_friend']);
+    $user_id = 1; // Replace with the current user's ID, you need to fetch it based on the logged-in user
+
+    // Remove the friend
+    $remove_query = "DELETE FROM friends WHERE user_id = $user_id AND friend_id = $friend_id_to_remove";
+    mysqli_query($dbc, $remove_query);
+}
+?> -->
