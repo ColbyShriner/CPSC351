@@ -3,7 +3,7 @@
 $dbhost = "localhost";
 $dbuser = "root";
 $dbpass = "";
-$dbname = "authentication";
+$dbname = "database351";
 
 if(!$con = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname))
 {
